@@ -29,37 +29,37 @@ def recursion(L, i, l, AS, S):
 
 
 def iteration(L):
-    AS = []
+    array_of_sequences = []
     val = L[0]
-    S = [val]
-    lastval = S[-1]
+    sequences = [val]
+    lastval = sequences[-1]
     for j in L[1:]:
         newval = j
         # print('val:{0}, lastval:{1}, newval: {2}'.format(val, lastval, newval))
         if L[-1] == newval:
-            S.append(newval)
-            T = S.copy()
-            # print('Sequence {0}'.format(S))
-            AS.append(T)
+            sequences.append(newval)
+            T = sequences.copy()
+            # print('Sequence {0}'.format(sequences))
+            array_of_sequences.append(T)
         elif lastval < newval:
-            S.append(newval)
-            # print('Append {0} <= {1}; S: {2}'.format(val, newval, S))
+            sequences.append(newval)
+            # print('Append {0} <= {1}; sequences: {2}'.format(val, newval, sequences))
             lastval = newval
         else:
-            if len(S) > 1:
+            if len(sequences) > 1:
                 # print('Pop: {0}'.format(lastval))
-                T = S.copy()
-                # print('Sequence {0}'.format(S))
-                AS.append(T)
-                S.pop()
-                # print('Poping {0}; S: {1}'.format(lastval, S))
-                lastval = S[-1]
-                S.append(newval)
-                # print('Popend {0} <= {1}; S: {2}'.format(val, newval, S))
+                T = sequences.copy()
+                # print('Sequence {0}'.format(sequences))
+                array_of_sequences.append(T)
+                sequences.pop()
+                # print('Poping {0}; sequences: {1}'.format(lastval, sequences))
+                lastval = sequences[-1]
+                sequences.append(newval)
+                # print('Popend {0} <= {1}; sequences: {2}'.format(val, newval, sequences))
                 lastval = newval
 
     result = {'sum': 0, 'sequence': None}
-    for x in AS:
+    for x in array_of_sequences:
         total = sum(x)
         if total > result['sum']:
             result['sum'] = total
