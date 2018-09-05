@@ -32,35 +32,25 @@ def recursion(v, L, sequence, array_of_sequences):
         return True
 
 
-def iteration(L):
+def iteration(v, L):
+    sequence = []
     array_of_sequences = []
-    val = L[0]
-    sequences = [val]
-    lastval = sequences[-1]
-    for j in L[1:]:
-        newval = j
-        if L[-1] == newval:
-            # save last sequence
-            sequences.append(newval)
-            S = sequences.copy()
-            array_of_sequences.append(S)
-        elif lastval < newval:
-            # sequence ascending
-            sequences.append(newval)
-            lastval = newval
+    sequence.append(v)
+    for i in L:
+        if i > sequence[-1]:
+            sequence.append(i)
         else:
-            if len(sequences) > 1:
-                # need to save sequence and start a new one
-                S = sequences.copy()
-                array_of_sequences.append(S)
-                sequences.pop()
-                lastval = sequences[-1]
-                sequences.append(newval)
-                lastval = newval
+            array_of_sequences.append(sequence.copy())
+            sequence.pop()
+            sequence.append(i)
 
+    array_of_sequences.append(sequence.copy())
+    return(array_of_sequences)
+
+
+def find_max_sum_and_sequence(L):
     result = {'sum': 0, 'sequence': None}
-    # compute the highest value
-    for x in array_of_sequences:
+    for x in L:
         total = sum(x)
         if total > result['sum']:
             result['sum'] = total
@@ -75,7 +65,9 @@ def max_sum_subset_iterative(L):
     if len(L) == 1:
         return L[1]
     else:
-        return (iteration(L))
+        array_of_sequences = iteration(L[0], L[1:])
+        # print(array_of_sequences)
+        return(find_max_sum_and_sequence(array_of_sequences))
 
 
 def max_sum_subset_recursive(L):
@@ -88,17 +80,9 @@ def max_sum_subset_recursive(L):
     sequence = []
     array_of_sequences = []
     recursion(L[0], L[1:], sequence, array_of_sequences)
+
     # print(array_of_sequences)
-
-    # compute the highest value
-    result = {'sum': 0, 'sequence': None}
-    for x in array_of_sequences:
-        total = sum(x)
-        if total > result['sum']:
-            result['sum'] = total
-            result['sequence'] = x
-
-    return(result)
+    return(find_max_sum_and_sequence(array_of_sequences))
 
 
 if __name__ == "__main__":
