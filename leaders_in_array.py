@@ -60,6 +60,7 @@ if __name__ == '__main__':
     data.append([1, 2, 3, 4, 0])
     data.append([5])
     data.append([16, 2])
+    data.append([])
 
     heading = 'Iterative'
     print(heading)
