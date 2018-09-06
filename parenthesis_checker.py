@@ -3,51 +3,49 @@
 
 
 def balanced_checker(textstr):
-    B = 0
-    P = 0
-    S = 0
-    i = 0
+    brackets = {'braces': 0, 'parenthesis': 0, 'square': 0}
+    i = 1
 
-    balanced = True
     for c in textstr:
         # print('c: {0}'.format(c))
         if c == '(':
-            P += 1
+            brackets['parenthesis'] += 1
         elif c == ')':
-            if P > 0:
-                P -= 1
+            if brackets['parenthesis'] > 0:
+                brackets['parenthesis'] -= 1
             else:
-                print("unbalanced: '{0}'".format(c))
-                balanced = False
+                print('{0:4s}: {1}'.format('()', '^' * i))
 
         if c == '{':
-            B += 1
+            brackets['braces'] += 1
         elif c == '}':
-            if B > 0:
-                B -= 1
+            if brackets['braces'] > 0:
+                brackets['braces'] -= 1
             else:
-                print("unbalanced: '{0}'".format(c))
-                balanced = False
+                print('{0:4s}: {1}'.format('{}', '^' * i))
 
         if c == ']':
-            S += 1
+            brackets['square'] += 1
         elif c == ']':
-            if S > 0:
-                S -= 1
+            if brackets['square'] > 0:
+                brackets['square'] -= 1
             else:
-                print("unbalanced: '{0}'".format(c))
-                balanced = False
+                print('{0:4s}: {1}'.format('[]', '^' * i))
 
         i += 1
 
-    return(balanced)
+    return(brackets['braces'] == 0 and brackets['parenthesis'] == 0 and brackets['square'] == 0)
 
 
 if __name__ == '__main__':
     data = []
     data.append('{([])}')
+    data.append('{()[])}')
+    data.append('{()}')
     data.append('()')
     data.append('()[]')
+    data.append('{}([[])}')
 
     for d in data:
-        print("data:'{0}' => {1}".format(d, balanced_checker(d)))
+        print("data:'{0}'".format(d))
+        balanced_checker(d)
