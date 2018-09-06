@@ -21,14 +21,15 @@ def find_leaders_in_array_iterative(v, L):
     return sequence
 
 
-def find_leaders_in_array_recrusively(v, L, S):
-    if v > L[0]:
+def find_leaders_in_array_recursive(v, L, S):
+    #     print('v: {0}, L: {1}, S: {2}'.format(v, L, S))
+    if len(L) == 0:
         S.append(v)
+    elif v > L[0]:
+        S.append(v)
+        find_leaders_in_array_recursive(L[0], L[1:], S)
     else:
-        if find_leaders_in_array_recrusively(L[0], L[1:], S):
-            return False
-        else:
-            return True
+        find_leaders_in_array_recursive(L[0], L[1:], S)
 
 
 def leaders_in_array_iterative(L):
@@ -49,9 +50,8 @@ def leaders_in_array_recursive(L):
         return L
     else:
         sequence = []
-        sequence = find_leaders_in_array_iterative(L[0], L[1:])
+        find_leaders_in_array_recursive(L[0], L[1:], sequence)
         return sequence
-    return None
 
 
 if __name__ == '__main__':
