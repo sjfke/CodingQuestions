@@ -9,27 +9,19 @@
 
 
 def recursion(v, L, sequence, array_of_sequences):
-    #     print('Down: {0}, List: {1}'.format(v, L))
+    # print('v: {0}, L: {1}, S: {2}, AS: {3}'.format(v, L, sequence, array_of_sequences))
     if len(L) == 0:
-        return False
-    elif len(L) == 1:
-        x = L[0]
         sequence.append(v)
-        sequence.append(x)
-        # print(sequence)
         array_of_sequences.append(sequence.copy())
-    elif len(L) > 1:
-        x = L[0]
+        # print('v: {0}, L: {1}, S: {2}, AS: {3}'.format(v, L, sequence, array_of_sequences))
+    elif v < L[0]:
         sequence.append(v)
-        if v > x:
-            # print(sequence)
-            array_of_sequences.append(sequence.copy())
-            sequence.pop()
-
-        if recursion(x, L[1:], sequence, array_of_sequences):
-            return False
+        recursion(L[0], L[1:], sequence, array_of_sequences)
     else:
-        return True
+        sequence.append(v)
+        array_of_sequences.append(sequence.copy())
+        sequence.pop()
+        recursion(L[0], L[1:], sequence, array_of_sequences)
 
 
 def iteration(v, L):
