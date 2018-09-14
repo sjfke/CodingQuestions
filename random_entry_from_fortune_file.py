@@ -60,16 +60,17 @@ def cookie_list(fd):
     return L
 
 
-def get_fortune_text(fd, offset):
+def get_fortune_text_from_list(fd, offset):
     '''
-    Extract lulti-line text from the file.
+    Extract multi-line text from the file.
     :param fd: file handle
     :param offset: bytes from the begining of the file
     '''
-    current_offset = fd.tell()
+    current_offset = fd.tell()  # save file cursor
     fd.seek(offset)
     cookie_text = fd.readline()
 
+    # repeat..until loop
     while True:
         line = fd.readline()
         if not line:
@@ -79,26 +80,71 @@ def get_fortune_text(fd, offset):
         else:
             cookie_text += line
 
-    fd.seek(current_offset)
+    fd.seek(current_offset)  # restore file cursor
 
     return cookie_text
 
 
-if __name__ == '__main__':
-    filename = 'fortunes'
+def get_fortune_text_from_file(fd, offset):
+    '''
+    Extract multi-line cookie_text by searching the file
+    :param fd: file handle
+    :param offset: bytes from
+    '''
+    current_offset = fd.tell()
+    fd.seek(offset)
+    cookie_text = fd.readline()
+    separator_found = False
 
-    file_size = None
+    while True:
+        line = fd.readline()
+        if not line:
+            break
+        elif re.match(r'^%$', line):
+            if not separator_found:
+                # reject all text up until first separator found
+                separator_found = True
+                cookie_text = ''
+            else:
+                fd.seek(current_offset)  # restore file cursor
+                return cookie_text
+        else:
+            cookie_text += line
+
+    fd.seek(current_offset)  # restore file cursor
+    return None
+
+
+def get_file_size(textstr):
     try:
-        file_size = os.path.getsize(filename)
+        return(os.path.getsize(textstr))
     except OSError as err:
         print("OS error: {0}".format(err))
         sys.exit(1)
+
+
+if __name__ == '__main__':
+    filename = 'fortunes'
+    file_size = get_file_size(filename)
 
     with open(filename, 'r') as f:
 
         cookies = cookie_list(f)
         random_offset = random.randrange(len(cookies))
-        print(get_fortune_text(f, cookies[random_offset]), end='')
+        # print('{0}, offset: {1} Bytes ({2} Bytes)'.format(filename, random_offset, file_size))
+        cookie_text = get_fortune_text_from_list(f, cookies[random_offset])
+        if not cookie_text:
+            cookie_text = 'Not your lucky day, try again'
 
-#         print('{0}'.format(cookies))
-#         print("'{0}', has {1:3d} lines ({2} Bytes)".format(filename, get_line_count(f), file_size))
+        print('list:')
+        print('{0}'.format(cookie_text, end=''))
+
+        random_offset = random.randrange(file_size)
+        # print('{0}, offset: {1} Bytes ({2} Bytes)'.format(filename, random_offset, file_size))
+
+        cookie_text = get_fortune_text_from_file(f, random_offset)
+        if not cookie_text:
+            cookie_text = 'Not your lucky day, try again'
+
+        print('file:')
+        print('{0}'.format(cookie_text, end=''))
