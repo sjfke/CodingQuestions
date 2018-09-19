@@ -27,25 +27,38 @@ class Heap:
         else:
             self.data = data
 
-    # Print the tree
-    def PrintTree(self):
+    # Convert to a list
+    def to_list(self, L):
         if self.left:
-            self.left.PrintTree()
-        print('{0:2d}'.format(self.data), end='')
+            self.left.to_list(L)
+
+        L.append(self.data)
         
         if self.right:
-            self.right.PrintTree()
+            self.right.to_list(L)
             
             
             
 if __name__ == "__main__":
     data = [1, 3, 6, 5, 9, 8]
     print('data: {0}'.format(data))
-    value = data.pop(0)
-    root = Heap(value)
+    root = Heap(data.pop(0))
     for val in data:
         root.insert(val)
     
-    print('heap: [', end='')
-    root.PrintTree()
-    print(']')
+    L = []
+    root.to_list(L)
+    print('heap: {0}'.format(L))
+
+    print('#')
+    data = [3, 6, 9, 2, 15, 10, 14, 5, 12]
+    print('data: {0}'.format(data))
+    root = Heap(data.pop(0))
+    for val in data:
+        root.insert(val)
+    
+    L = []
+    root.to_list(L)
+    print('heap: {0}'.format(L))
+    
+    
